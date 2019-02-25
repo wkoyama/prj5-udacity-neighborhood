@@ -6,9 +6,39 @@ import Navbar from 'react-bootstrap/Navbar';
 import Container from 'react-bootstrap/Container';
 import Button from 'react-bootstrap/Button';
 import NavbarToggle from 'react-bootstrap/NavbarToggle';
+import NavbarCollapse from 'react-bootstrap/NavbarCollapse';
 
 
 var model = {
+
+    buildMarkers: function(){
+        var markers = [];
+
+        const muuburger = new model.Marker( {lat:-23.5861822, lng: -46.6801062}, 'Hamburgueria artesanal', 'Muuburger');
+        const icarros = new model.Marker( {lat:-23.585512, lng: -46.672682}, 'iCarros', 'iCarros');
+        const pavilhaoJapones = new model.Marker( {lat:-23.5859989, lng: -46.6619324}, 'Pavilhão histórico japonês com jardim, carpas e sala de chá, além de hall para exibição de obras de arte.', 'Pavilhão Japonês');
+        const bluePub = new model.Marker( {lat:-23.5630475, lng: -46.6503268}, 'The Blue Pub', 'Blue Pub');
+        const goodBarber = new model.Marker( {lat:-23.5492413, lng: -46.5690508}, 'Good Barber Barbearia', 'GoodBarber');
+        const samsTatuape = new model.Marker( {lat:-23.5441402, lng: -46.5877014}, 'Rede de lojas exclusiva para associados que vende vários itens de mercearia, eletrônicos e UD.', 'Sams club Tatuapé');
+        const teatroRenault = new model.Marker( {lat:-23.5542898, lng: -46.6385248}, 'Clássico e renomado, destinado às grandes montagens da Broadway, em casarão tombado pelo patrimônio histórico.', 'Teatro Renault');
+        const soulbox = new model.Marker( {lat:-23.5901545, lng: -46.6763188}, 'Academia Soulbox', 'Studio SoulBox');
+        const shoppingAnalia = new model.Marker( {lat:-23.5614376, lng: -46.5604314}, 'Shopping Analia Franco', 'Shopping Analia Franco');
+        const hooters = new model.Marker( {lat:-23.566724, lng: -46.6516762}, 'Hooters Brasil', 'Hooters');
+        
+        markers.push(muuburger);
+        markers.push(icarros);
+        markers.push(pavilhaoJapones);
+        markers.push(bluePub);
+        markers.push(goodBarber);
+        markers.push(samsTatuape);
+        markers.push(teatroRenault);
+        markers.push(soulbox);
+        markers.push(shoppingAnalia);
+        markers.push(hooters);
+
+        return markers;
+    },
+    
     Marker: function(position, title, name) {
         this.position = position;
         this.title = title;
@@ -16,51 +46,57 @@ var model = {
     }    
 }
 
-const uluru = new model.Marker( {lat: -25.344, lng: 131.036} , 'Hello Uluru!', "Uluru");
-const casa = new model.Marker( {lat: -23.5407026, lng: -46.4330621} , 'Casa do Kenji', "Casa");
-// const uluru = {lat: -25.344, lng: 131.036};
-
-const markers = [ casa, uluru ];
+const markers = model.buildMarkers();
 
 class Neighborhood extends Component {
-
-    // render() {
-    //     return (
-    //         <main className="container">
-    //             <h1>Meus marcadores</h1>
-    //             <FilterMap markers={ markers }/>
-    //             <MapContainer markers={ markers } />
-    //         </main>
-    //     )
-    // }
+    
+    constructor(props) {
+        super(props);
+        this.toggleSidebar = this.toggleSidebar.bind(this);
+    }
 
     state = {
-        navExpanded: false
-    }
-
-    setNavExpanded(expanded) {
-        this.setState({ navExpanded: expanded });
+        navExpanded: false,
+        width: window.innerWidth
     }
     
-    closeNav() {
-        this.setState({ navExpanded: false });
+    componentWillMount() {
+        window.addEventListener('resize', this.handleWindowSizeChange);
+    }
+    
+    componentWillUnmount() {
+        window.removeEventListener('resize', this.handleWindowSizeChange);
+    }
+    
+    handleWindowSizeChange = () => {
+        this.setState({ width: window.innerWidth });
+    };
+
+    toggleSidebar(){
+        this.setState({ navExpanded: !this.state.navExpanded })
     }
 
     render() {
+        const { width } = this.state;
+        const isDesktop = width >= 991;
+
         return (
             <div>
-                <section>
-                    <Navbar expand="lg" variant="dark" bg="dark" className="shadow-lg p-3">
-                        <span className="navbar-toggler-icon"></span>
-                        <h1 className="justify-content-end">Meus marcadores</h1>
+                <header className="bg-dark shadow-lg">
+                    <Navbar onClick={this.toggleSidebar} onToggle={this.toggleSidebar} expand="lg" variant="dark" bg="dark" className="p-3">
+                        <NavbarToggle onToggle={this.teste}/>
                     </Navbar>
-                </section>
+                    <h1 className="justify-content-end">Meus marcadores</h1>
+                </header>
                 <main>
-                    
-                    <FilterMap markers={ markers }/>
-                    <MapContainer markers={ markers } />
-                    
+                    <div id="main-content">
+                        <FilterMap onCollapse={this.state.navExpanded && !isDesktop} markers={ markers }/>
+                        <MapContainer onCollapse={this.state.navExpanded && !isDesktop} markers={ markers } />
+                    </div>                    
                 </main>
+                <footer className="d-inline-flex position-fixed bg-dark">
+                    <p className="mt-2">copyright by bla</p>
+                </footer>
             </div>
         )
     }

@@ -46,7 +46,12 @@ class Map extends Component {
 
     render() {
       return (
-        <div id={ this.props.id } className="map-container d-inline-flex position-static" style={{ width: '70%', height: '100%' }}  />
+        <div id="map-container" className={this.props.className}>
+            <div id={ this.props.id } className="d-inline-flex container-fluid">
+                <div id={ this.props.id} style={{display: 'flex', flexDirection: 'column', margin: 'auto', alignItems: 'center', alignContent: 'center'}}/>
+            </div>
+        </div>
+        
       );
     }
   }

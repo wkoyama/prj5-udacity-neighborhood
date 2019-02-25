@@ -60,7 +60,7 @@ class MapContainer extends Component {
         return (
             
             <Map id="map" 
-                className="map-container"
+                className={this.props.onCollapse ? "" : "sidebar-size"}
                 opt={{
                     zoom: 10, 
                     center: {lat: -23.5505199, lng: -46.6333094 }
