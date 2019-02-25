@@ -90,8 +90,12 @@ class Neighborhood extends Component {
                 </header>
                 <main>
                     <div id="main-content">
-                        <FilterMap onCollapse={this.state.navExpanded && !isDesktop} markers={ markers }/>
-                        <MapContainer onCollapse={this.state.navExpanded && !isDesktop} markers={ markers } />
+                        <FilterMap 
+                            onCollapse={this.state.navExpanded && !isDesktop} 
+                            markers={ markers }/>
+                        <MapContainer 
+                            onCollapse={this.state.navExpanded && !isDesktop} 
+                            markers={ markers } />
                     </div>                    
                 </main>
                 <footer className="d-inline-flex position-fixed bg-dark">

@@ -75,7 +75,7 @@ footer {
 }
 
 .search-input {
-  width: 18vh;
+  width: 18vh !important;
 }
 
 .sidebar {

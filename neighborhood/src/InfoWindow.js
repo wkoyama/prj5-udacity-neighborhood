@@ -3,8 +3,6 @@ import React, { Component } from 'react';
 // import Card, { CardActions, CardContent, CardMedia } from 'material-ui/Card';
 // import Button from 'material-ui/Button';
 // import Typography from 'material-ui/Typography';
-import * as FoursquareAPI from './FoursquareAPI'
-
 
 const styles = {
   card: {
@@ -16,50 +14,98 @@ const styles = {
   },
 };
 
+class WikipediaInfo extends Component {
+    
+    state = {
+        links: []
+    }
+
+    componentDidMount() {
+        console.log('mount');
+        var cityStr = 'jk180';
+        //&callback=wikiCallback
+        fetch(`https://en.wikipedia.org/w/api.php?action=opensearch&search=${cityStr}&format=json&origin=*`, {
+            // mode: 'no-cors' // 'cors' by default
+            method: "GET"
+        })
+        .then(response => response.json())
+        .then(json => {
+            var articleList = json[1];
+            var articles = []; 
+            for(var i = 0; i < articleList.length; i++) {
+                var articleStr = articleList[i];
+                var url = "https://en.wikipedia.org/wiki/" + articleStr;
+                this.setState(prevState => {
+                    links: this.state.links.push({"key": articleStr,"value": url})
+                })
+            }
+            
+        }).catch (error => {
+            console.log(error.message);
+        });
+        
+    }
+    
+    render() {
+        const { links } = this.state;
+        let items = '';
+if (this.state.links.length) {
+    return <div>
+            <ul>
+                {this.links.map( link => {
+                    <React.Fragment><li key={link.key}><a href={link.value}>{link.key}</a></li></React.Fragment>
+                })}
+            </ul>
+        </div>
+}
+return null;
+        
+    }
+
+    // fetch (props) {
+    //     var cityStr = 'jk180';
+    //     //&callback=wikiCallback
+    //     fetch(`https://en.wikipedia.org/w/api.php?action=opensearch&search=${cityStr}&format=json&origin=*`, {
+    //         // mode: 'no-cors' // 'cors' by default
+    //         method: "GET"
+    //     })
+    //     .then(response => response.json())
+    //     .then(json => {
+    //         var articleList = json[1];
+    //         for(var i = 0; i < articleList.length; i++) {
+    //             var articleStr = articleList[i];
+    //             var url = "https://en.wikipedia.org/wiki/" + articleStr;
+    //             return  (
+    //                 <li key={articleStr}>
+    //                     <a href={url}>{articleStr}</a>
+    //                 </li>
+    //             );
+    //         }
+    //     }).catch (error => {
+    //         console.log(error.message);
+    //     });
+    // }
+}
+
+function Links(props) {
+    let links = props.links;
+    console.log(links);
+
+    return links.map( link => {
+        <React.Fragment><li key={link.key}><a href={link.value}>{link.key}</a></li></React.Fragment>
+    });
+
+}
+
 function InfoWindow(props) {
   const { classes } = props;
 
   return (
     <div>
         <ImageCard />
-        
+        <WikipediaInfo />
     </div>
   );
-}
-
-function createInfoWindow(marker) {
-       
-    var contentString = '';
-
-    FoursquareAPI.getInfo(marker).then(info => {
-        console.log(info);
-        this.setState(state => ({
-            infos: state.infos.push( {"key" : marker.name, "value" : info} )
-        }))
-    });
-
-    var contentString = '<div id="content">'+
-                            '<div id="siteNotice">'+
-                            '</div>'+
-                            '<h1 id="firstHeading" class="firstHeading">Uluru</h1>'+
-                            '<div id="bodyContent">'+
-                            '<p><b>Uluru</b>, also referred to as <b>Ayers Rock</b>, is a large ' +
-                            'sandstone rock formation in the southern part of the '+
-                            'Northern Territory, central Australia. It lies 335&#160;km (208&#160;mi) '+
-                            'south west of the nearest large town, Alice Springs; 450&#160;km '+
-                            '(280&#160;mi) by road. Kata Tjuta and Uluru are the two major '+
-                            'features of the Uluru - Kata Tjuta National Park. Uluru is '+
-                            'sacred to the Pitjantjatjara and Yankunytjatjara, the '+
-                            'Aboriginal people of the area. It has many springs, waterholes, '+
-                            'rock caves and ancient paintings. Uluru is listed as a World '+
-                            'Heritage Site.</p>'+
-                            '<p>Attribution: Uluru, <a href="https://en.wikipedia.org/w/index.php?title=Uluru&oldid=297882194">'+
-                            'https://en.wikipedia.org/w/index.php?title=Uluru</a> '+
-                            '(last visited June 22, 2009).</p>'+
-                            '</div>'+
-                            '</div>'
-
-    return <InfoWindow />;
 }
 
 function ImageCard (props) {
@@ -75,5 +121,6 @@ function ImageCard (props) {
         />
     )
 }
+
 
 export default InfoWindow;
