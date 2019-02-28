@@ -55,9 +55,14 @@ class Neighborhood extends Component {
         super(props);
         this.toggleSidebar = this.toggleSidebar.bind(this);
         this.toggleMarker = this.toggleMarker.bind(this);
+        this.onMarkerClick = this.onMarkerClick.bind(this);
+        this.onInfoWindowClose = this.onInfoWindowClose.bind(this);
     }
 
     state = {
+        currentMarker: {},
+        isShowInfoWindow: false,
+        changeMarker: false,
         navExpanded: false,
         width: window.innerWidth,
         markers: markers
@@ -80,7 +85,6 @@ class Neighborhood extends Component {
     }
 
     toggleMarker(markerId){
-        console.log('toggleMarker');
         this.setState({
             markers: this.state.markers.map( marker => {
                 if(marker.name === markerId){
@@ -91,6 +95,28 @@ class Neighborhood extends Component {
                 return marker;
             })
         });
+    }
+
+    onMarkerClick(marker) {
+        this.setState({
+            markers: this.state.markers.map( m => {
+                if(m.name === marker.name){
+                    m.isOpen = !m.isOpen;
+                    return m;
+                }
+
+                return m;
+            }),
+            currentMarker: marker,
+            isShowInfoWindow: true
+        })
+    }
+
+    onInfoWindowClose(){
+        this.setState({
+            currentMarker: null,
+            isShowInfoWindow: false
+        })
     }
 
     render() {
@@ -112,11 +138,13 @@ class Neighborhood extends Component {
                         <FilterMap 
                             onCollapse={this.state.navExpanded && !isDesktop} 
                             markers={ this.state.markers }
-                            showMarker={this.toggleMarker} />
+                            showMarker={this.onMarkerClick} />
                         <MapContainer 
                             onCollapse={this.state.navExpanded && !isDesktop} 
                             markers={ this.state.markers } 
-                            showMarker={this.toggleMarker} />
+                            showMarker={this.onMarkerClick}
+                            currentMarker={this.state.currentMarker}
+                            onInfoWindowClose={this.onInfoWindowClose} />
                     </div>                    
                 </main>
                 <footer className="d-inline-flex position-fixed bg-dark">

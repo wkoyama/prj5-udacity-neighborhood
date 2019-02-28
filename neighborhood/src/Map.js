@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import { renderToString } from 'react-dom/server'
+import Marker from './Marker'
 
 function FoursquareInfo(props) {
     var marker = props.marker;
@@ -43,52 +44,15 @@ class Map extends Component {
         <div id="map-container" className={this.props.className}>
             <div id="map" className="d-inline-flex container-fluid">
                 <div style={{display: 'flex', flexDirection: 'column', margin: 'auto', alignItems: 'center', alignContent: 'center'}}/>
-                {
-                    
-                    
-                        this.props.markers.map( (marker, index) => {
-                            
-                            let foursquareInfo = this.props.infos ?  this.props.infos.filter(function(info){
-                                return info.name.toLowerCase().search(
-                                marker.name.toLowerCase()) !== -1;
-                            }) : [];
-                            let info = renderToString(<InfoWindow info={foursquareInfo} marker={marker}/>);
-                            
-                            if(!this.props.showMarker){
-                                var infowindow = window.google && new window.google.maps.InfoWindow({
-                                    content: info
-                                });
-                            }
-                            
-
-                            var googleMarker = window.google && new window.google.maps.Marker({
-                                position: marker.position,
-                                map: this.props.map,
-                                title: marker.title
-                            });
-
-                            infowindow && infowindow.close();
-
-                            if(marker.isOpen){
-                                
-                                infowindow && infowindow.open(this.props.map, googleMarker);
-                                this.props.map && this.props.map.setZoom(13);
-                                this.props.map && this.props.map.setCenter(googleMarker.getPosition());
-                            }
-
-                            var self = this;
-                            googleMarker && googleMarker.addListener('click', function() {
-                                infowindow && infowindow.open(self.props.map, googleMarker);
-                                self.props.map && self.props.map.setZoom(13);
-                                self.props.map && self.props.map.setCenter(googleMarker.getPosition());
-                            });
-
-                            
-                            
-                        })
-                    }
-                    
-                  
+                { 
+                    this.props.map && this.props.markers.map(marker => {
+                        return (<Marker key={marker.name} 
+                            marker={marker}
+                            currentMarker={this.props.currentMarker}
+                            map={this.props.map}
+                            showMarker={this.props.showMarker} />)
+                    })
+                }
             </div>
         </div>
         

@@ -48,7 +48,7 @@ class FilterMap extends Component {
                                 return (
                                     <div key={marker.name}>
                                     <Nav.Link id={marker.name} key={marker.name} onClick={e => {
-                                        this.props.showMarker(marker.name)
+                                        this.props.showMarker(marker)
                                     }} className="marker-link">
                                         {marker.name}
                                     </Nav.Link>

@@ -95,6 +95,12 @@ class MapContainer extends Component {
         // this.handleMarkerClick = this.handleMarkerClick.bind(this);
         // this.handleMapClick = this.handleMapClick.bind(this);
     }
+
+    state = {
+        markers: [],
+        infos: [],
+        isLoaded: false
+    }
     
     componentDidMount() {
         if (!window.google) {
@@ -111,12 +117,14 @@ class MapContainer extends Component {
         }
 
         this.props.markers.map((marker) => {
-            if(marker.isOpen) {
-                this.setState({currentMarker: marker});
-            }
+            // if(marker.isOpen) {
+            //     this.setState({currentMarker: marker});
+            // }
 
             this.fetchData(marker);
-        })
+        });
+
+        this.setState({isLoaded: true})
     }
 
     fetchData(marker){
@@ -169,13 +177,6 @@ class MapContainer extends Component {
         //     console.log(error.message);
         // });
     }
-    
-    state = {
-        markers: [],
-        infos: [],
-        currentMarker: {},
-        isShowInfoWindow: false
-    }
 
     onScriptLoad() {
         const map = new window.google.maps.Map(
@@ -185,10 +186,7 @@ class MapContainer extends Component {
                 center: {lat: -23.5505199, lng: -46.6333094 }
             }
         );
-        this.setState(prevState => ({ 
-            map: map
-        }));
-        // this.setState({ map:map });
+        this.setState({ map: map });
     }
 
     buildMapTagScript() {
@@ -202,6 +200,8 @@ class MapContainer extends Component {
     }
 
     render(){
+        if(!this.state.isLoaded) return <div>Loading...</div>
+
         return (
             
             <Map id="map" 
@@ -209,8 +209,9 @@ class MapContainer extends Component {
                 map={this.state.map} 
                 markers={this.props.markers} 
                 infos={this.state.infos} 
-                showMarker={this.toggleMarker} >
-                
+                showMarker={this.props.showMarker}
+                currentMarker={this.props.currentMarker}
+                onInfoWindowClose={this.props.onInfoWindowClose}>
             </Map>
         )
     }
