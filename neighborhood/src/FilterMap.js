@@ -8,13 +8,11 @@ class FilterMap extends Component {
     
     constructor(props) {
         super(props);
-        this.handleClickItem = this.handleClickItem.bind(this);
     }
 
     state = {
         initialItems: [],
-        items: [],
-        currentMarker: {}
+        items: []
     }
 
     componentWillMount() {
@@ -35,10 +33,6 @@ class FilterMap extends Component {
         this.setState({items: list});
     }
 
-    handleClickItem(e) {
-        e.preventDefault();
-    }
-
     render() {
         return (
             <div id="sidebar-wrapper" style={ this.props.onCollapse ? {display:'none'} : {}}>
@@ -53,7 +47,9 @@ class FilterMap extends Component {
                             this.state.items.map( marker => {
                                 return (
                                     <div key={marker.name}>
-                                    <Nav.Link id={marker.name} key={marker.name} onClick={this.handleClickItem} className="marker-link">
+                                    <Nav.Link id={marker.name} key={marker.name} onClick={e => {
+                                        this.props.showMarker(marker.name)
+                                    }} className="marker-link">
                                         {marker.name}
                                     </Nav.Link>
                                     </div>

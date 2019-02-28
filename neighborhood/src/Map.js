@@ -1,54 +1,94 @@
 import React, {Component} from 'react'
+import { renderToString } from 'react-dom/server'
+
+function FoursquareInfo(props) {
+    var marker = props.marker;
+
+    return (
+        <div>
+        <div>{
+            props.info
+        }</div></div>
+    )
+}
+
+function InfoWindow (props) {
+    // console.log(props);
+    return (
+      <div>
+        <ImageCard marker = {props.marker} />
+        <FoursquareInfo info={props.info} marker = {props.marker} />
+      </div>
+    );
+}
+
+function ImageCard (props) {
+    let address = `${props.marker.position.lat},${props.marker.position.lng}`;
+    
+    let streetviewUrl = `https://maps.googleapis.com/maps/api/streetview?location=${address}&source=outdoor&fov=120&size=300x200&key=AIzaSyAyqlRkzuQkEOFiSYkn198oWO5zwAwKWP0`;
+    let addressAlt = `${address} view`
+    return (
+        <img id="local-view" 
+        className="card-img"
+        src={streetviewUrl}
+        alt={addressAlt}
+        />
+    )
+}
 
 class Map extends Component {
-    constructor(props) {
-      super(props);
-      this.onScriptLoad = this.onScriptLoad.bind(this);
-    }
-  
-    state = {
-        map: {}
-    }
-
-    onScriptLoad() {
-        const map = new window.google.maps.Map(
-            document.getElementById(this.props.id), 
-            this.props.opt
-        );
-        this.props.onMapLoad(map)
-        // this.setState({ map:map });
-    }
-  
-    componentDidMount() {
-        if (!window.google) {
-            var script = this.buildMapTagScript();
-            var after = document.getElementsByTagName('script')[0];
-            after.parentNode.insertBefore(script, after);
-
-            //Importante. So pode acessar o maps apos o load
-            script.addEventListener('load', e => {
-                this.onScriptLoad();
-            })
-        } else {
-            this.onScriptLoad();
-        }
-    }
-  
-    buildMapTagScript() {
-        var script = document.createElement('script');
-        script.type = 'text/javascript';
-        script.src = `https://maps.google.com/maps/api/js?key=AIzaSyAyqlRkzuQkEOFiSYkn198oWO5zwAwKWP0`;
-        script.async = true;
-        script.defer = true;
-
-        return script;
-    }
 
     render() {
       return (
         <div id="map-container" className={this.props.className}>
-            <div id={ this.props.id } className="d-inline-flex container-fluid">
-                <div id={ this.props.id} style={{display: 'flex', flexDirection: 'column', margin: 'auto', alignItems: 'center', alignContent: 'center'}}/>
+            <div id="map" className="d-inline-flex container-fluid">
+                <div style={{display: 'flex', flexDirection: 'column', margin: 'auto', alignItems: 'center', alignContent: 'center'}}/>
+                {
+                    
+                    
+                        this.props.markers.map( (marker, index) => {
+                            
+                            let foursquareInfo = this.props.infos ?  this.props.infos.filter(function(info){
+                                return info.name.toLowerCase().search(
+                                marker.name.toLowerCase()) !== -1;
+                            }) : [];
+                            let info = renderToString(<InfoWindow info={foursquareInfo} marker={marker}/>);
+                            
+                            if(!this.props.showMarker){
+                                var infowindow = window.google && new window.google.maps.InfoWindow({
+                                    content: info
+                                });
+                            }
+                            
+
+                            var googleMarker = window.google && new window.google.maps.Marker({
+                                position: marker.position,
+                                map: this.props.map,
+                                title: marker.title
+                            });
+
+                            infowindow && infowindow.close();
+
+                            if(marker.isOpen){
+                                
+                                infowindow && infowindow.open(this.props.map, googleMarker);
+                                this.props.map && this.props.map.setZoom(13);
+                                this.props.map && this.props.map.setCenter(googleMarker.getPosition());
+                            }
+
+                            var self = this;
+                            googleMarker && googleMarker.addListener('click', function() {
+                                infowindow && infowindow.open(self.props.map, googleMarker);
+                                self.props.map && self.props.map.setZoom(13);
+                                self.props.map && self.props.map.setCenter(googleMarker.getPosition());
+                            });
+
+                            
+                            
+                        })
+                    }
+                    
+                  
             </div>
         </div>
         

@@ -59,36 +59,28 @@ import * as WikipediaAPI from './WikipediaAPI'
 //     }
 // }
 
-function ImageCard (props) {
-    let address = `${props.marker.position.lat},${props.marker.position.lng}`;
+function Info(marker) {
+    var location = marker.name;
+
+    fetch(`https://api.foursquare.com/v2/venues/search?near=sao%20paulo,sp&query=${location}&client_id=${foursquare.client_id}&client_secret=${foursquare.client_secret}&v=20190223`, {
+        // mode: 'no-cors' // 'cors' by default
+        method: "GET"
+    })
+    .then(response => response.json())
+    .then(
+        data => data.response.venues[0]
+    ).catch (error => {
+        console.log(error.message);
+    });
     
-    let streetviewUrl = `https://maps.googleapis.com/maps/api/streetview?location=${address}&source=outdoor&fov=120&size=300x200&key=AIzaSyAyqlRkzuQkEOFiSYkn198oWO5zwAwKWP0`;
-    let addressAlt = `${address} view`
-    return (
-        <img id="local-view" 
-        className="card-img"
-        src={streetviewUrl}
-        alt={addressAlt}
-        />
-    )
 }
 
-function FoursquareInfo(props) {
-
-    return (
-        <div>
-        <FoursquareInfo marker = {props.marker} />
-        <div>info</div></div>
-    )
+const foursquare = {
+    client_id: '4YFOMB5TUR11KJ3T0RI0NSFQCD1AKNX13ZLKFHYWIW1VCQZS',
+    client_secret: 'GRSQLVQD5WCV1HE551LYGQE5LBKS5ZSLMGWLWZWEMNOGB4ZT'
 }
 
-function InfoWindow (props) {
-    return (
-      <div>
-        <ImageCard marker = {props.marker} />
-      </div>
-    );
-}
+
 
 class MapContainer extends Component {
     // static propTypes = {
@@ -97,22 +89,85 @@ class MapContainer extends Component {
     // }
     constructor(props) {
         super(props);
+        this.onScriptLoad = this.onScriptLoad.bind(this);
         // this.createInfoWindow = this.createInfoWindow.bind(this);
 
         // this.handleMarkerClick = this.handleMarkerClick.bind(this);
         // this.handleMapClick = this.handleMapClick.bind(this);
     }
     
-    componentWillMount() {
-        this.setState({markers:this.props.markers})
+    componentDidMount() {
+        if (!window.google) {
+            var script = this.buildMapTagScript();
+            var after = document.getElementsByTagName('script')[0];
+            after.parentNode.insertBefore(script, after);
+
+            //Importante. So pode acessar o maps apos o load
+            script.addEventListener('load', e => {
+                this.onScriptLoad();
+            })
+        } else {
+            this.onScriptLoad();
+        }
+
+        this.props.markers.map((marker) => {
+            if(marker.isOpen) {
+                this.setState({currentMarker: marker});
+            }
+
+            this.fetchData(marker);
+        })
     }
 
-    componentDidMount() {
-        // this.state.markers.map(marker => {
-        //     FoursquareAPI.getInfo(marker).then((venues) => {
-        //         this.setState({"key": marker.name, "value": venues});
-        //     });
+    fetchData(marker){
+        var location = encodeURI(marker.name);
+
+        fetch(`https://api.foursquare.com/v2/venues/search?intent=match&ll=${marker.position.lat},${marker.position.lng}&query=${location}&client_id=${foursquare.client_id}&client_secret=${foursquare.client_secret}&v=20190223`, {
+            // mode: 'no-cors' // 'cors' by default
+            method: "GET"
+        })
+        .then(response => response.json())
+        .then(
+            data => !data.response.venues[0] ? [] : this.fetchPlace(data.response.venues[0])
+        )
+        .catch (error => {
+            console.log(error.message);
+        });
+     
+    }
+
+    fetchPlace (place) {
+        
+        // console.log(`https://api.foursquare.com/v2/venues/${place.id}?client_id=${foursquare.client_id}&client_secret=${foursquare.client_secret}&v=20190223`);
+
+        const details = [
+        ];
+
+        details.map(detail => {
+            this.setState(prevState => {
+                infos: prevState.infos.push({
+                    key: detail.name,
+                    value: detail
+                })
+            })
+        });
+        // fetch(`https://api.foursquare.com/v2/venues/${place.id}?client_id=${foursquare.client_id}&client_secret=${foursquare.client_secret}&v=20190223`, {
+        //     // mode: 'no-cors' // 'cors' by default
+        //     method: "GET"
         // })
+        // .then(response => response.json())
+        // .then(
+        //     data => data.response.venue
+        // ).then (
+        //     info => this.setState(prevState => ({
+        //         infos: prevState.infos.push({
+        //             key: info.name,
+        //             value: info
+        //         })
+        //     }))
+        // ).catch (error => {
+        //     console.log(error.message);
+        // });
     }
     
     state = {
@@ -122,89 +177,41 @@ class MapContainer extends Component {
         isShowInfoWindow: false
     }
 
-    renderToString() {
-        return renderToString(<InfoWindow />)
+    onScriptLoad() {
+        const map = new window.google.maps.Map(
+            document.getElementById("map"), 
+            {
+                zoom: 10, 
+                center: {lat: -23.5505199, lng: -46.6333094 }
+            }
+        );
+        this.setState(prevState => ({ 
+            map: map
+        }));
+        // this.setState({ map:map });
     }
 
-    // handleMarkerClick = (props, marker, e) => {
-    //     if(this.state.isShowInfoWindow) {
-    //         this.setState({
-    //             currentMarker: marker,
-    //             isShowInfoWindow: true
-    //         });
-    //     }
-    // }
+    buildMapTagScript() {
+        var script = document.createElement('script');
+        script.type = 'text/javascript';
+        script.src = `https://maps.google.com/maps/api/js?key=AIzaSyAyqlRkzuQkEOFiSYkn198oWO5zwAwKWP0`;
+        script.async = true;
+        script.defer = true;
 
-    // buildGoogleMarkers() {
-    //     this.setState({markers: this.props.markers});
-    //     let markers = [];
-
-    //     this.state.markers.map( marker => {
-    //         let googleMarker = new window.google.maps.Marker({
-    //             position: marker.position,
-    //             title: marker.title
-    //         });
-
-    //         markers.push(googleMarker);
-    //     });
-
-    //     return markers;
-    // }
+        return script;
+    }
 
     render(){
         return (
             
             <Map id="map" 
                 className={this.props.onCollapse ? "" : "sidebar-size"}
-                opt={{
-                    zoom: 10, 
-                    center: {lat: -23.5505199, lng: -46.6333094 }
-                }}
-                onMapLoad={map => {
-                    
-                    {
-                        this.state.markers.map( (marker, index) => {
-                            // var contentString = '<div id="content">'+
-                            //     '<div id="siteNotice">'+
-                            //     '</div>'+
-                            //     '<h1 id="firstHeading" class="firstHeading">Uluru</h1>'+
-                            //     '<div id="bodyContent">'+
-                            //     '<p><b>Uluru</b>, also referred to as <b>Ayers Rock</b>, is a large ' +
-                            //     'sandstone rock formation in the southern part of the '+
-                            //     'Northern Territory, central Australia. It lies 335&#160;km (208&#160;mi) '+
-                            //     'south west of the nearest large town, Alice Springs; 450&#160;km '+
-                            //     '(280&#160;mi) by road. Kata Tjuta and Uluru are the two major '+
-                            //     'features of the Uluru - Kata Tjuta National Park. Uluru is '+
-                            //     'sacred to the Pitjantjatjara and Yankunytjatjara, the '+
-                            //     'Aboriginal people of the area. It has many springs, waterholes, '+
-                            //     'rock caves and ancient paintings. Uluru is listed as a World '+
-                            //     'Heritage Site.</p>'+
-                            //     '<p>Attribution: Uluru, <a href="https://en.wikipedia.org/w/index.php?title=Uluru&oldid=297882194">'+
-                            //     'https://en.wikipedia.org/w/index.php?title=Uluru</a> '+
-                            //     '(last visited June 22, 2009).</p>'+
-                            //     '</div>'+
-                            //     '</div>';
-                            let info = renderToString(<InfoWindow marker={marker}/>)
-                            
-                            var infowindow = new window.google.maps.InfoWindow({
-                                content: info
-                              });
-
-                            var googleMarker = new window.google.maps.Marker({
-                                position: marker.position,
-                                map: map,
-                                title: marker.title
-                            });
-
-                            googleMarker.addListener('click', function() {
-                                infowindow.open(map, googleMarker);
-                            });
-                            
-                        })
-                    }
-                    
-                  }} >
-                  </Map>
+                map={this.state.map} 
+                markers={this.props.markers} 
+                infos={this.state.infos} 
+                showMarker={this.toggleMarker} >
+                
+            </Map>
         )
     }
 }

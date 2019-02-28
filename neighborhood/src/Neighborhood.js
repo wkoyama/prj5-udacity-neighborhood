@@ -43,6 +43,7 @@ var model = {
         this.position = position;
         this.title = title;
         this.name = name;
+        this.isOpen = false;
     }    
 }
 
@@ -53,11 +54,13 @@ class Neighborhood extends Component {
     constructor(props) {
         super(props);
         this.toggleSidebar = this.toggleSidebar.bind(this);
+        this.toggleMarker = this.toggleMarker.bind(this);
     }
 
     state = {
         navExpanded: false,
-        width: window.innerWidth
+        width: window.innerWidth,
+        markers: markers
     }
     
     componentWillMount() {
@@ -73,18 +76,34 @@ class Neighborhood extends Component {
     };
 
     toggleSidebar(){
-        this.setState({ navExpanded: !this.state.navExpanded })
+        this.setState({ navExpanded: !this.state.navExpanded });
+    }
+
+    toggleMarker(markerId){
+        console.log('toggleMarker');
+        this.setState({
+            markers: this.state.markers.map( marker => {
+                if(marker.name === markerId){
+                    marker.isOpen = !marker.isOpen;
+                    return marker;
+                }
+
+                return marker;
+            })
+        });
     }
 
     render() {
         const { width } = this.state;
         const isDesktop = width >= 991;
 
+        console.table(this.state.markers);
+        
         return (
             <div>
                 <header className="bg-dark shadow-lg">
                     <Navbar onClick={this.toggleSidebar} onToggle={this.toggleSidebar} expand="lg" variant="dark" bg="dark" className="p-3">
-                        <NavbarToggle onToggle={this.teste}/>
+                        <NavbarToggle />
                     </Navbar>
                     <h1 className="justify-content-end">Meus marcadores</h1>
                 </header>
@@ -92,10 +111,12 @@ class Neighborhood extends Component {
                     <div id="main-content">
                         <FilterMap 
                             onCollapse={this.state.navExpanded && !isDesktop} 
-                            markers={ markers }/>
+                            markers={ this.state.markers }
+                            showMarker={this.toggleMarker} />
                         <MapContainer 
                             onCollapse={this.state.navExpanded && !isDesktop} 
-                            markers={ markers } />
+                            markers={ this.state.markers } 
+                            showMarker={this.toggleMarker} />
                     </div>                    
                 </main>
                 <footer className="d-inline-flex position-fixed bg-dark">
