@@ -1,14 +1,5 @@
 import React, {Component} from 'react'
-// import ReactDOM, { render } from 'react-dom';
-// import PropTypes from 'prop-types'
 import Map from './Map'
-import Marker from './Marker'
-
-import { renderToString } from 'react-dom/server'
-import * as FoursquareAPI from './FoursquareAPI'
-// import InfoWindow from './InfoWindow';
-import * as WikipediaAPI from './WikipediaAPI'
-// import * as InfoWindow from './InfoWindow'
 
 // class WikipediaInfo extends Component {
     
@@ -83,17 +74,10 @@ const foursquare = {
 
 
 class MapContainer extends Component {
-    // static propTypes = {
-    //     className: PropTypes.string,
-    //     name: PropTypes.string
-    // }
+    
     constructor(props) {
         super(props);
         this.onScriptLoad = this.onScriptLoad.bind(this);
-        // this.createInfoWindow = this.createInfoWindow.bind(this);
-
-        // this.handleMarkerClick = this.handleMarkerClick.bind(this);
-        // this.handleMapClick = this.handleMapClick.bind(this);
     }
 
     state = {
@@ -117,10 +101,6 @@ class MapContainer extends Component {
         }
 
         this.props.markers.map((marker) => {
-            // if(marker.isOpen) {
-            //     this.setState({currentMarker: marker});
-            // }
-
             this.fetchData(marker);
         });
 
@@ -209,9 +189,14 @@ class MapContainer extends Component {
                 map={this.state.map} 
                 markers={this.props.markers} 
                 infos={this.state.infos} 
+                addGoogleMarker={this.props.addGoogleMarker}
                 showMarker={this.props.showMarker}
+                isShowInfoWindow={this.props.isShowInfoWindow}
                 currentMarker={this.props.currentMarker}
-                onInfoWindowClose={this.props.onInfoWindowClose}>
+                lastInfoWindow={this.props.lastInfoWindow}
+                prevInfoWindow={this.props.prevInfoWindow}
+                onInfoWindowClose={this.props.onInfoWindowClose}
+                closeAllMarkers={this.props.closeAllMarkers} >
             </Map>
         )
     }

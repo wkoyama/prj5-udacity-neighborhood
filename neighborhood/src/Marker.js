@@ -7,7 +7,9 @@ class Marker extends Component {
     }
 
     componentDidMount(){
-        this.showMarker();
+        if(!this.marker){
+            this.showMarker();
+        }
     }
     
     showMarker() {
@@ -26,19 +28,23 @@ class Marker extends Component {
         }
 
         this.marker.addListener('click', this.handleEvent(this.props.marker));
+        this.props.addGoogleMarker(this.marker, this.props.marker.name);
     }
 
     handleEvent(marker) {
         return (e) => {
-            this.props.showMarker(marker);
+
+            if(this.props.currentMarker !== marker){
+            
+                if(!marker.isOpen){
+                    this.props.showMarker(marker);
+                }
+            }
+            
         }
     }
 
     render() {
-        if(this.props.marker.isOpen) {
-            this.showMarker();
-        }
-        
         return null;
     }
 

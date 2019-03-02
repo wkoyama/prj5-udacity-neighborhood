@@ -1,41 +1,6 @@
 import React, {Component} from 'react'
-import { renderToString } from 'react-dom/server'
 import Marker from './Marker'
-
-function FoursquareInfo(props) {
-    var marker = props.marker;
-
-    return (
-        <div>
-        <div>{
-            props.info
-        }</div></div>
-    )
-}
-
-function InfoWindow (props) {
-    // console.log(props);
-    return (
-      <div>
-        <ImageCard marker = {props.marker} />
-        <FoursquareInfo info={props.info} marker = {props.marker} />
-      </div>
-    );
-}
-
-function ImageCard (props) {
-    let address = `${props.marker.position.lat},${props.marker.position.lng}`;
-    
-    let streetviewUrl = `https://maps.googleapis.com/maps/api/streetview?location=${address}&source=outdoor&fov=120&size=300x200&key=AIzaSyAyqlRkzuQkEOFiSYkn198oWO5zwAwKWP0`;
-    let addressAlt = `${address} view`
-    return (
-        <img id="local-view" 
-        className="card-img"
-        src={streetviewUrl}
-        alt={addressAlt}
-        />
-    )
-}
+import InfoWindow from './InfoWindow'
 
 class Map extends Component {
 
@@ -46,12 +11,33 @@ class Map extends Component {
                 <div style={{display: 'flex', flexDirection: 'column', margin: 'auto', alignItems: 'center', alignContent: 'center'}}/>
                 { 
                     this.props.map && this.props.markers.map(marker => {
-                        return (<Marker key={marker.name} 
-                            marker={marker}
-                            currentMarker={this.props.currentMarker}
-                            map={this.props.map}
-                            showMarker={this.props.showMarker} />)
+                        return (
+                                <Marker key={marker.name} 
+                                    marker={marker}
+                                    currentMarker={this.props.currentMarker}
+                                    map={this.props.map}
+                                    showMarker={this.props.showMarker}
+                                    infos={this.props.infos}
+                                    addGoogleMarker={this.props.addGoogleMarker}
+                                    isShowInfoWindow={this.props.isShowInfoWindow}
+                                    onInfoWindowClose={this.props.onInfoWindowClose}
+                                    closeAllMarkers={this.props.closeAllMarkers} />
+
+                                
+                        )
                     })
+
+                }
+
+                { this.props.isShowInfoWindow 
+                    && this.props.currentMarker && 
+                    <InfoWindow
+                        map={this.props.map}
+                        currentMarker={this.props.currentMarker}
+                        onClose={this.props.onInfoWindowClose}
+                        lastInfoWindow={this.props.lastInfoWindow}
+                        prevInfoWindow={this.props.prevInfoWindow}
+                        infos={this.props.infos}/>
                 }
             </div>
         </div>

@@ -1,12 +1,8 @@
 import React, {Component} from 'react'
-import ReactDOM from 'react-dom';
 import MapContainer from './MapContainer';
 import FilterMap from './FilterMap';
 import Navbar from 'react-bootstrap/Navbar';
-import Container from 'react-bootstrap/Container';
-import Button from 'react-bootstrap/Button';
 import NavbarToggle from 'react-bootstrap/NavbarToggle';
-import NavbarCollapse from 'react-bootstrap/NavbarCollapse';
 
 
 var model = {
@@ -44,6 +40,7 @@ var model = {
         this.title = title;
         this.name = name;
         this.isOpen = false;
+        this.gMarker = {};
     }    
 }
 
@@ -54,9 +51,11 @@ class Neighborhood extends Component {
     constructor(props) {
         super(props);
         this.toggleSidebar = this.toggleSidebar.bind(this);
-        this.toggleMarker = this.toggleMarker.bind(this);
+        this.addGoogleMarker = this.addGoogleMarker.bind(this);
         this.onMarkerClick = this.onMarkerClick.bind(this);
         this.onInfoWindowClose = this.onInfoWindowClose.bind(this);
+        this.closeAllMarkers = this.closeAllMarkers.bind(this);
+        this.lastInfoWindow = this.lastInfoWindow.bind(this);
     }
 
     state = {
@@ -65,7 +64,8 @@ class Neighborhood extends Component {
         changeMarker: false,
         navExpanded: false,
         width: window.innerWidth,
-        markers: markers
+        markers: markers,
+        prevInfoWindow: {}
     }
     
     componentWillMount() {
@@ -84,22 +84,24 @@ class Neighborhood extends Component {
         this.setState({ navExpanded: !this.state.navExpanded });
     }
 
-    toggleMarker(markerId){
-        this.setState({
-            markers: this.state.markers.map( marker => {
-                if(marker.name === markerId){
-                    marker.isOpen = !marker.isOpen;
-                    return marker;
+    addGoogleMarker(gMarker, name) {
+        this.setState(prevState => {
+            markers: prevState.markers.map( m => {
+                if(m.name === name){
+                    m.gMarker = gMarker;
+                    return m;
                 }
 
-                return marker;
+                return m;
             })
-        });
+        })
     }
 
     onMarkerClick(marker) {
-        this.setState({
-            markers: this.state.markers.map( m => {
+        this.closeAllMarkers();
+        
+        this.setState(prevState => ({
+            markers: prevState.markers.map( m => {
                 if(m.name === marker.name){
                     m.isOpen = !m.isOpen;
                     return m;
@@ -109,21 +111,44 @@ class Neighborhood extends Component {
             }),
             currentMarker: marker,
             isShowInfoWindow: true
+        }))
+    }
+
+    lastInfoWindow(last) {
+        this.setState({
+            prevInfoWindow: last
         })
     }
 
-    onInfoWindowClose(){
-        this.setState({
+    onInfoWindowClose(marker){
+        this.setState(prevState => ({
+            markers: prevState.markers.map( m => {
+                if(m.name === marker.name){
+                    m.isOpen = !m.isOpen;
+                    return m;
+                }
+
+                return m;
+            }),
             currentMarker: null,
             isShowInfoWindow: false
-        })
+        }))
+    }
+
+    closeAllMarkers(){
+        this.setState(prevState => ({
+            markers: prevState.markers.map( m => {
+                m.isOpen = false;
+                return m;
+            }),
+            currentMarker: null,
+            isShowInfoWindow: false
+        }))
     }
 
     render() {
         const { width } = this.state;
         const isDesktop = width >= 991;
-
-        console.table(this.state.markers);
         
         return (
             <div>
@@ -138,13 +163,20 @@ class Neighborhood extends Component {
                         <FilterMap 
                             onCollapse={this.state.navExpanded && !isDesktop} 
                             markers={ this.state.markers }
-                            showMarker={this.onMarkerClick} />
+                            showMarker={this.onMarkerClick}
+                            isShowInfoWindow={this.state.isShowInfoWindow}
+                            closeAllMarkers={this.props.closeAllMarkers} />
                         <MapContainer 
                             onCollapse={this.state.navExpanded && !isDesktop} 
                             markers={ this.state.markers } 
                             showMarker={this.onMarkerClick}
+                            addGoogleMarker={this.addGoogleMarker}
                             currentMarker={this.state.currentMarker}
-                            onInfoWindowClose={this.onInfoWindowClose} />
+                            isShowInfoWindow={this.state.isShowInfoWindow}
+                            lastInfoWindow={this.lastInfoWindow}
+                            prevInfoWindow={this.state.prevInfoWindow}
+                            onInfoWindowClose={this.onInfoWindowClose} 
+                            closeAllMarkers={this.closeAllMarkers} />
                     </div>                    
                 </main>
                 <footer className="d-inline-flex position-fixed bg-dark">

@@ -83,13 +83,33 @@ footer {
   width: 18vh;
 }
 
+.location-details {
+  color: black;
+  text-align: center;
+	margin-top: 1rem;
+}
+
+.location-details-container {
+
+}
+
+.address {
+  line-height: 0;
+	margin-top: 1rem;
+}
+
 @media only screen and (max-width: 405px) {
   h1 {
     font-size: 1.5rem;
+    text-align: right;
   }
 
   .gm-fullscreen-control {
     display: none;
+  }
+
+  .address{
+    line-height: normal;
   }
 }
 
@@ -98,7 +118,7 @@ footer {
     font-size: 1.5rem;
   }
   .search-input {
-    width: 22vh;
+    width: 22vh !important;
   }
   .sidebar-size {
     margin-left: 22vh;
@@ -109,6 +129,9 @@ footer {
   }
   .gm-fullscreen-control {
     display: none;
+  }
+  .address{
+    line-height: normal;
   }
 }
 
