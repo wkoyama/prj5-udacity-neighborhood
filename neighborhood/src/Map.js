@@ -17,9 +17,7 @@ class Map extends Component {
                                     currentMarker={this.props.currentMarker}
                                     map={this.props.map}
                                     showMarker={this.props.showMarker}
-                                    infos={this.props.infos}
                                     addGoogleMarker={this.props.addGoogleMarker}
-                                    isShowInfoWindow={this.props.isShowInfoWindow}
                                     onInfoWindowClose={this.props.onInfoWindowClose}
                                     closeAllMarkers={this.props.closeAllMarkers} />
 

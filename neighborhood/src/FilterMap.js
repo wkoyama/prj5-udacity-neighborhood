@@ -5,10 +5,6 @@ import FormControl from 'react-bootstrap/FormControl';
 
 class FilterMap extends Component {        
     
-    constructor(props) {
-        super(props);
-    }
-
     state = {
         initialItems: [],
         items: []

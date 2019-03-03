@@ -1,12 +1,15 @@
 html {
   box-sizing: border-box;
 }
+
 *, *:before, *:after {
   box-sizing: inherit;
 }
+
 html, body, .root {
   height: 100%;
 }
+
 body {
   margin: 0;
   padding: 0;
@@ -14,6 +17,7 @@ body {
   line-height: 1.5;
   color: #9a9da0;
 }
+
 body, .app {
   background: #f5f5f5;
 }
@@ -89,12 +93,13 @@ footer {
 	margin-top: 1rem;
 }
 
-.location-details-container {
-
-}
-
 .address {
   line-height: 0;
+	margin-top: 1rem;
+}
+
+.footer-card{
+  font-size: 10px;
 	margin-top: 1rem;
 }
 
@@ -117,19 +122,24 @@ footer {
   h1 {
     font-size: 1.5rem;
   }
+
   .search-input {
     width: 22vh !important;
   }
+
   .sidebar-size {
     margin-left: 22vh;
   }
+
   .sidebar {
     z-index: -1; 
     width: 22vh;
   }
+
   .gm-fullscreen-control {
     display: none;
   }
+
   .address{
     line-height: normal;
   }
@@ -139,9 +149,11 @@ footer {
   .sidebar-size {
     margin-left: 28vh;
   }
+
   .search-input {
     width: 28vh !important;
   }
+
   .sidebar {
     z-index: -1; 
     width: 28vh;

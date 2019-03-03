@@ -1,11 +1,7 @@
-import React, {Component} from 'react'
+import {Component} from 'react'
 
 class Marker extends Component {
-
-    constructor(props) {
-        super(props);
-    }
-
+    
     componentDidMount(){
         if(!this.marker){
             this.showMarker();
