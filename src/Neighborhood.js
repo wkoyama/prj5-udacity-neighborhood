@@ -140,18 +140,17 @@ class Neighborhood extends Component {
 
     //controle de evento do marcador
     onMarkerClick(marker) {
-        // if(this.state.currentMarker !== null && this.state.currentMarker.isOpen){
-        //     this.toggleMarker(this.state.currentMarker);
-        // }
+        if(marker !== this.state.currentMarker){
+            this.toggleMarker(marker, this.state.currentMarker);
+        }
 
         this.closeAllMarkers();
-        // this.toggleMarker(marker);
         this.setState(prevState => ({
             items: prevState.items.map( m => {
                 if(m.name === marker.name){
                     m.isOpen = !m.isOpen;
-                    // if(m.isOpen){
-                    //     this.toggleMarker(m);
+                    // if(m.isOpen && m.isVisible) {
+                    //     this.toggleMarker(m, this.state.currentMarker);
                     // }
                     return m;
                 }
@@ -161,6 +160,10 @@ class Neighborhood extends Component {
             currentMarker: marker,
             isShowInfoWindow: true
         }));
+
+        // this.state.currentMarker != null && 
+        //     this.state.currentMarker.isOpen && 
+        //     this.toggleMarker(this.state.currentMarker);
     }
 
     //ultimo infowindow aberto
@@ -170,17 +173,38 @@ class Neighborhood extends Component {
         })
     }
 
-    toggleMarker(marker){
-        if (marker.gMarker.getAnimation() !== null) {
-            marker.gMarker.setAnimation(null);
+    toggleMarker(marker, current){
+        
+        if(current === null || Object.entries(current).length === 0 && current.constructor === Object) {
+            //sem marcador atual
+            if (marker.gMarker.getAnimation() !== null && marker.gMarker.getAnimation() !== -1 ) {
+                marker.gMarker.setAnimation(-1);
+            } else {
+                marker.gMarker.setAnimation(window.google.maps.Animation.BOUNCE);
+            }
         } else {
-            marker.gMarker.setAnimation(window.google.maps.Animation.BOUNCE);
+            
+            if(marker !== current){
+                if (current.gMarker.getAnimation() !== null && current.gMarker.getAnimation() !== -1) {
+                    current.gMarker.setAnimation(-1);
+                } 
+                
+                marker.gMarker.setAnimation(window.google.maps.Animation.BOUNCE);
+            } else {
+                
+                if (current.gMarker.getAnimation() !== null && current.gMarker.getAnimation() !== -1) {
+                    current.gMarker.setAnimation(-1);
+                } 
+            }
+            
         }
+
+        
     }
 
     //controle de evento do fechamento da infowindow
     onInfoWindowClose(marker){
-        // this.toggleMarker(marker);
+        this.toggleMarker(marker, this.state.currentMarker);
         this.setState(prevState => ({
             items: prevState.items.map( m => {
                 if(m.name === marker.name){

@@ -44,8 +44,8 @@ class Marker extends Component {
     render() {
         if(this.props.currentMarker && this.props.marker.name === this.props.currentMarker.name){
             //caso seja marcador atual, setar as configuracoes de centralizacao
-            this.props.map.setZoom(13);
-            this.props.map.setCenter(this.marker.getPosition());
+            // this.props.map.setZoom(13);
+            // this.props.map.setCenter(this.marker.getPosition());
         }
         return null;
     }
