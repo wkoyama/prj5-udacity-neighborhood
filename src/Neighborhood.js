@@ -182,7 +182,7 @@ class Neighborhood extends Component {
                     </div>                    
                 </main>
                 <footer className="d-inline-flex position-fixed bg-dark">
-                    <p className="mt-2">copyright by bla</p>
+                    <p className="mt-2">Desenvolvido por Wesley Kenji Oyama - 2019</p>
                 </footer>
             </div>
         )
