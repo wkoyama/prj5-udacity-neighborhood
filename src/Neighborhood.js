@@ -43,6 +43,7 @@ var model = {
         this.title = title;
         this.name = name;
         this.isOpen = false;
+        this.isVisible = true;
         this.gMarker = {};
     }    
 }
@@ -59,6 +60,7 @@ class Neighborhood extends Component {
         this.onInfoWindowClose = this.onInfoWindowClose.bind(this);
         this.closeAllMarkers = this.closeAllMarkers.bind(this);
         this.lastInfoWindow = this.lastInfoWindow.bind(this);
+        this.filterList = this.filterList.bind(this);
     }
 
     state = {
@@ -67,6 +69,7 @@ class Neighborhood extends Component {
         navExpanded: false,
         width: window.innerWidth,
         markers: markers,
+        items: markers,
         prevInfoWindow: {}
     }
     
@@ -88,9 +91,14 @@ class Neighborhood extends Component {
 
     addGoogleMarker(gMarker, name) {
         this.setState(prevState => {
-            markers: prevState.markers.map( m => {
+            items: prevState.items.map( m => {
                 if(m.name === name){
                     m.gMarker = gMarker;
+                    
+                    if(m.isVisible) {
+                        m.gMarker.setVisible(m.isVisible);
+                    }
+
                     return m;
                 }
 
@@ -99,11 +107,39 @@ class Neighborhood extends Component {
         })
     }
 
+    filterList = (event) => {
+        var list = this.state.markers;
+
+        list.map( m => {
+            m.isVisible = false;
+            
+            if(m.gMarker) {
+                m.gMarker.setVisible(m.isVisible);
+            }
+        })
+
+        list = list.filter(function(marker){
+            return marker.name.toLowerCase().search(
+            event.target.value.toLowerCase()) !== -1;
+        });
+
+        this.setState({
+            items: list.map( m => {
+                m.isVisible = true;
+                
+                if(m.gMarker) {
+                    m.gMarker.setVisible(m.isVisible);
+                }
+                return m;
+            })
+        });
+    }
+
     onMarkerClick(marker) {
         this.closeAllMarkers();
         
         this.setState(prevState => ({
-            markers: prevState.markers.map( m => {
+            items: prevState.items.map( m => {
                 if(m.name === marker.name){
                     m.isOpen = !m.isOpen;
                     return m;
@@ -124,7 +160,7 @@ class Neighborhood extends Component {
 
     onInfoWindowClose(marker){
         this.setState(prevState => ({
-            markers: prevState.markers.map( m => {
+            items: prevState.items.map( m => {
                 if(m.name === marker.name){
                     m.isOpen = !m.isOpen;
                     return m;
@@ -139,7 +175,7 @@ class Neighborhood extends Component {
 
     closeAllMarkers(){
         this.setState(prevState => ({
-            markers: prevState.markers.map( m => {
+            items: prevState.items.map( m => {
                 m.isOpen = false;
                 return m;
             }),
@@ -165,12 +201,15 @@ class Neighborhood extends Component {
                         <FilterMap 
                             onCollapse={this.state.navExpanded && !isDesktop} 
                             markers={ this.state.markers }
+                            items={this.state.items}
+                            filterList={this.filterList}
                             showMarker={this.onMarkerClick}
                             isShowInfoWindow={this.state.isShowInfoWindow}
                             closeAllMarkers={this.props.closeAllMarkers} />
                         <MapContainer 
-                            onCollapse={this.state.navExpanded && !isDesktop} 
-                            markers={ this.state.markers } 
+                            onCollapse={this.state.navExpanded && !isDesktop}
+                            items={this.state.items}
+                            filterList={this.filterList}
                             showMarker={this.onMarkerClick}
                             addGoogleMarker={this.addGoogleMarker}
                             currentMarker={this.state.currentMarker}

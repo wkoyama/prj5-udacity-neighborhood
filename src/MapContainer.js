@@ -33,7 +33,7 @@ class MapContainer extends Component {
             this.onScriptLoad();
         }
 
-        this.props.markers.map((marker) => {
+        this.props.items.map((marker) => {
             return this.fetchData(marker);
         });
 
@@ -131,7 +131,7 @@ class MapContainer extends Component {
             <Map id="map" 
                 className={this.props.onCollapse ? "" : "sidebar-size"}
                 map={this.state.map} 
-                markers={this.props.markers} 
+                markers={this.props.items} 
                 infos={this.state.infos} 
                 addGoogleMarker={this.props.addGoogleMarker}
                 showMarker={this.props.showMarker}
