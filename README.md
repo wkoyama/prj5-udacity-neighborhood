@@ -20,7 +20,7 @@ Caso não tenha, favor seguir o passo a passo [aqui](https://yarnpkg.com/pt-BR/d
 - Execute os seguintes comandos:
 
 ```
-    cd prj5-udacity-neighborhood/neighborhood
+    cd prj5-udacity-neighborhood
  
     yarn install
     
