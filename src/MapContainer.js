@@ -91,7 +91,7 @@ class MapContainer extends Component {
     buildMapTagScript() {
         var script = document.createElement('script');
         script.type = 'text/javascript';
-        script.src = `https://maps.google.com/maps12/api/js?key=AIzaSyAyqlRkzuQkEOFiSYkn198oWO5zwAwKWP0`;
+        script.src = `https://maps.google.com/maps/api/js?key=AIzaSyAyqlRkzuQkEOFiSYkn198oWO5zwAwKWP0`;
         script.async = true;
         script.defer = true;
         script.onerror = this.props.onMapsError;
