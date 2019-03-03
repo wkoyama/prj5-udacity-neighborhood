@@ -115,7 +115,8 @@ class MapContainer extends Component {
                 lastInfoWindow={this.props.lastInfoWindow}
                 prevInfoWindow={this.props.prevInfoWindow}
                 onInfoWindowClose={this.props.onInfoWindowClose}
-                closeAllMarkers={this.props.closeAllMarkers} >
+                closeAllMarkers={this.props.closeAllMarkers}
+                toggleMarker={this.props.toggleMarker} >
             </Map>
         )
     }

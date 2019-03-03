@@ -19,9 +19,8 @@ class Map extends Component {
                                     showMarker={this.props.showMarker}
                                     addGoogleMarker={this.props.addGoogleMarker}
                                     onInfoWindowClose={this.props.onInfoWindowClose}
-                                    closeAllMarkers={this.props.closeAllMarkers} />
-
-                                
+                                    closeAllMarkers={this.props.closeAllMarkers}
+                                    toggleMarker={this.props.toggleMarker} />
                         )
                     })
 

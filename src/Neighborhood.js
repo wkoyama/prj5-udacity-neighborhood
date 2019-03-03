@@ -61,6 +61,7 @@ class Neighborhood extends Component {
         this.closeAllMarkers = this.closeAllMarkers.bind(this);
         this.lastInfoWindow = this.lastInfoWindow.bind(this);
         this.filterList = this.filterList.bind(this);
+        this.toggleMarker = this.toggleMarker.bind(this);
     }
 
     state = {
@@ -139,12 +140,19 @@ class Neighborhood extends Component {
 
     //controle de evento do marcador
     onMarkerClick(marker) {
+        // if(this.state.currentMarker !== null && this.state.currentMarker.isOpen){
+        //     this.toggleMarker(this.state.currentMarker);
+        // }
+
         this.closeAllMarkers();
-        
+        // this.toggleMarker(marker);
         this.setState(prevState => ({
             items: prevState.items.map( m => {
                 if(m.name === marker.name){
                     m.isOpen = !m.isOpen;
+                    // if(m.isOpen){
+                    //     this.toggleMarker(m);
+                    // }
                     return m;
                 }
 
@@ -152,7 +160,7 @@ class Neighborhood extends Component {
             }),
             currentMarker: marker,
             isShowInfoWindow: true
-        }))
+        }));
     }
 
     //ultimo infowindow aberto
@@ -162,8 +170,17 @@ class Neighborhood extends Component {
         })
     }
 
+    toggleMarker(marker){
+        if (marker.gMarker.getAnimation() !== null) {
+            marker.gMarker.setAnimation(null);
+        } else {
+            marker.gMarker.setAnimation(window.google.maps.Animation.BOUNCE);
+        }
+    }
+
     //controle de evento do fechamento da infowindow
     onInfoWindowClose(marker){
+        // this.toggleMarker(marker);
         this.setState(prevState => ({
             items: prevState.items.map( m => {
                 if(m.name === marker.name){
@@ -175,7 +192,7 @@ class Neighborhood extends Component {
             }),
             currentMarker: null,
             isShowInfoWindow: false
-        }))
+        }));
     }
 
     //manipulador de evento para fechamento dos marcadores
@@ -187,7 +204,8 @@ class Neighborhood extends Component {
             }),
             currentMarker: null,
             isShowInfoWindow: false
-        }))
+        }));
+        
     }
 
     render() {
@@ -223,7 +241,8 @@ class Neighborhood extends Component {
                             lastInfoWindow={this.lastInfoWindow}
                             prevInfoWindow={this.state.prevInfoWindow}
                             onInfoWindowClose={this.onInfoWindowClose} 
-                            closeAllMarkers={this.closeAllMarkers} />
+                            closeAllMarkers={this.closeAllMarkers}
+                            toggleMarker={this.toggleMarker} />
                     </div>                    
                 </main>
                 <footer className="d-inline-flex position-fixed bg-dark">
