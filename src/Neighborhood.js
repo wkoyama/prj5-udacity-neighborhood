@@ -62,6 +62,7 @@ class Neighborhood extends Component {
         this.lastInfoWindow = this.lastInfoWindow.bind(this);
         this.filterList = this.filterList.bind(this);
         this.toggleMarker = this.toggleMarker.bind(this);
+        this.onMapsError = this.onMapsError.bind(this);
     }
 
     state = {
@@ -71,7 +72,8 @@ class Neighborhood extends Component {
         width: window.innerWidth,
         markers: markers,
         items: markers,
-        prevInfoWindow: {}
+        prevInfoWindow: {},
+        error: false
     }
     
     componentWillMount() {
@@ -116,7 +118,7 @@ class Neighborhood extends Component {
         list.map( m => {
             m.isVisible = false;
             
-            if(m.gMarker) {
+            if(Object.entries(m.gMarker).length !== 0 && m.gMarker.constructor === Object) {
                 m.gMarker.setVisible(m.isVisible);
                 
                 //Fix para resolver estado quando ja tem um selecionado que nao aparecera no resultado da lista.
@@ -137,7 +139,7 @@ class Neighborhood extends Component {
             items: list.map( m => {
                 m.isVisible = true;
                 
-                if(m.gMarker) {
+                if(Object.entries(m.gMarker).length !== 0 && m.gMarker.constructor === Object) {
                     m.gMarker.setVisible(m.isVisible);
                 }
                 return m;
@@ -147,6 +149,10 @@ class Neighborhood extends Component {
 
     //controle de evento do marcador
     onMarkerClick(marker) {
+        if(this.state.error) {
+            return;
+        }
+
         if(marker !== this.state.currentMarker){
             this.toggleMarker(marker, this.state.currentMarker);
         }
@@ -175,6 +181,9 @@ class Neighborhood extends Component {
 
     //ultimo infowindow aberto
     lastInfoWindow(last) {
+        if(this.state.error) {
+            return;
+        }
         this.setState({
             prevInfoWindow: last
         })
@@ -239,6 +248,13 @@ class Neighborhood extends Component {
         
     }
 
+    onMapsError(e){
+        this.setState({
+            error: true
+        });
+        this.toggleSidebar();
+    }
+
     render() {
         const { width } = this.state;
         const isDesktop = width >= 991;
@@ -273,7 +289,9 @@ class Neighborhood extends Component {
                             prevInfoWindow={this.state.prevInfoWindow}
                             onInfoWindowClose={this.onInfoWindowClose} 
                             closeAllMarkers={this.closeAllMarkers}
-                            toggleMarker={this.toggleMarker} />
+                            toggleMarker={this.toggleMarker} 
+                            onMapsError={this.onMapsError}
+                            hasError={this.state.error}/>
                     </div>                    
                 </main>
                 <footer className="d-inline-flex position-fixed bg-dark">

@@ -91,9 +91,10 @@ class MapContainer extends Component {
     buildMapTagScript() {
         var script = document.createElement('script');
         script.type = 'text/javascript';
-        script.src = `https://maps.google.com/maps/api/js?key=AIzaSyAyqlRkzuQkEOFiSYkn198oWO5zwAwKWP0`;
+        script.src = `https://maps.google.com/maps12/api/js?key=AIzaSyAyqlRkzuQkEOFiSYkn198oWO5zwAwKWP0`;
         script.async = true;
         script.defer = true;
+        script.onerror = this.props.onMapsError;
 
         return script;
     }
@@ -102,7 +103,6 @@ class MapContainer extends Component {
         if(!this.state.isLoaded) return <div>Loading...</div>
 
         return (
-            
             <Map id="map" 
                 className={this.props.onCollapse ? "" : "sidebar-size"}
                 map={this.state.map} 
@@ -116,7 +116,8 @@ class MapContainer extends Component {
                 prevInfoWindow={this.props.prevInfoWindow}
                 onInfoWindowClose={this.props.onInfoWindowClose}
                 closeAllMarkers={this.props.closeAllMarkers}
-                toggleMarker={this.props.toggleMarker} >
+                toggleMarker={this.props.toggleMarker}
+                hasError={this.props.hasError} >
             </Map>
         )
     }
