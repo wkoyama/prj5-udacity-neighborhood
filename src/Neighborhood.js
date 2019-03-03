@@ -89,6 +89,7 @@ class Neighborhood extends Component {
         this.setState({ navExpanded: !this.state.navExpanded });
     }
 
+    //metodo pai para adicao do marcador do google para a hierarquia
     addGoogleMarker(gMarker, name) {
         this.setState(prevState => {
             items: prevState.items.map( m => {
@@ -107,6 +108,7 @@ class Neighborhood extends Component {
         })
     }
 
+    //filtragem dos items
     filterList = (event) => {
         var list = this.state.markers;
 
@@ -135,6 +137,7 @@ class Neighborhood extends Component {
         });
     }
 
+    //controle de evento do marcador
     onMarkerClick(marker) {
         this.closeAllMarkers();
         
@@ -152,12 +155,14 @@ class Neighborhood extends Component {
         }))
     }
 
+    //ultimo infowindow aberto
     lastInfoWindow(last) {
         this.setState({
             prevInfoWindow: last
         })
     }
 
+    //controle de evento do fechamento da infowindow
     onInfoWindowClose(marker){
         this.setState(prevState => ({
             items: prevState.items.map( m => {
@@ -173,6 +178,7 @@ class Neighborhood extends Component {
         }))
     }
 
+    //manipulador de evento para fechamento dos marcadores
     closeAllMarkers(){
         this.setState(prevState => ({
             items: prevState.items.map( m => {

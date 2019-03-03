@@ -14,7 +14,6 @@ class MapContainer extends Component {
     }
 
     state = {
-        markers: [],
         infos: [],
         isLoaded: false
     }
@@ -43,10 +42,7 @@ class MapContainer extends Component {
     fetchData(marker){
         var location = encodeURI(marker.name);
 
-        // console.log(`https://api.foursquare.com/v2/venues/search?intent=match&ll=${marker.position.lat},${marker.position.lng}&query=${location}&client_id=${foursquare.client_id}&client_secret=${foursquare.client_secret}&v=20190223`);
-
         fetch(`https://api.foursquare.com/v2/venues/search?intent=match&ll=${marker.position.lat},${marker.position.lng}&query=${location}&client_id=${foursquare.client_id}&client_secret=${foursquare.client_secret}&v=20190223`, {
-            // mode: 'no-cors' // 'cors' by default
             method: "GET"
         })
         .then(response => response.json())
@@ -59,13 +55,14 @@ class MapContainer extends Component {
      
     }
     
+    /**
+     * 
+     *  devido a limitacao de requests da api de detalhes do foursquare, tive que manter os dados retornados da api hardcoded. 
+     * 
+     * */
     fetchPlace (markerName, place) {
-        /* devido a limitacao de requests da api de detalhes do foursquare, tive que manter os dados retornados da api hardcoded. */
-
-        /*
-            Tratamento de dado hardcode, deixado com um dos itens sem dados para simular quando dado nao foi encontrado
-        */
         
+        //Tratamento de dado hardcode, deixado com um dos itens sem dados para simular quando dado nao foi encontrado
         details.map(detail => {
             if(detail.value && detail.key === markerName){
                 this.setState({
@@ -77,29 +74,7 @@ class MapContainer extends Component {
             }
             return;
         });
-        
-        /* Tratamento correto com a chamada da api de detalhe do foursquare */
-
-        // fetch(`https://api.foursquare.com/v2/venues/${place.id}?client_id=${foursquare.client_id}&client_secret=${foursquare.client_secret}&v=20190223`, {
-        //     // mode: 'no-cors' // 'cors' by default
-        //     method: "GET"
-        // })
-        // .then(response => response.json())
-        // .then(
-        //     data => data.response.venue
-        // ).then (
-        //     info => {
-        //         console.log(info)
-        //         this.setState({
-        //             infos: [...this.state.infos, {
-        //                 key: markerName,
-        //                 value: info
-        //             }]
-        //         })
-        //     }
-        // ).catch (error => {
-        //     console.log("Ocorreu um erro ao tentar obter detalhes dos marcadores. " + error.message);
-        // });
+     
     }
 
     onScriptLoad() {
