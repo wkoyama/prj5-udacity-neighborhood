@@ -162,9 +162,6 @@ class Neighborhood extends Component {
             items: prevState.items.map( m => {
                 if(m.name === marker.name){
                     m.isOpen = !m.isOpen;
-                    // if(m.isOpen && m.isVisible) {
-                    //     this.toggleMarker(m, this.state.currentMarker);
-                    // }
                     return m;
                 }
 
@@ -173,10 +170,6 @@ class Neighborhood extends Component {
             currentMarker: marker,
             isShowInfoWindow: true
         }));
-
-        // this.state.currentMarker != null && 
-        //     this.state.currentMarker.isOpen && 
-        //     this.toggleMarker(this.state.currentMarker);
     }
 
     //ultimo infowindow aberto
