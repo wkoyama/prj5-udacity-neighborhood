@@ -1,6 +1,11 @@
 # Mapa do bairro
 
-Aplicativo que apresenta um mapa de um bairro com locais selecionados contendo informações provenientes da API do Foursquare e prévia de uma imagem retirada do street view. Esse aplicativo é meramente educacional para conclusão do projeto de Nanodegree Fullstack da Udacity.
+Aplicativo que apresenta um mapa de um bairro com locais selecionados contendo informações provenientes da API do Foursquare e prévia de uma imagem retirada do street view. Esse aplicativo é meramente educacional para conclusão do projeto de Nanodegree Fullstack da Udacity. Os modelos dos marcadores foram criados de forma hardcoded porém separado para que em novas implementações venha do back-end e/ou possam ser salvos conforme a separação de responsabilidades.
+
+
+:warning: **Nota**
+
+**Devido a limitação de requisições da API de detalhes do Foursquare para o tipo de conta, acabei optando por manter o schema da resposta de alguns marcadores fixos.**
 
 ## Pré-Requisitos
 
@@ -20,7 +25,7 @@ Caso não tenha, favor seguir o passo a passo [aqui](https://yarnpkg.com/pt-BR/d
 - Execute os seguintes comandos:
 
 ```
-    cd prj5-udacity-neighborhood/neighborhood
+    cd prj5-udacity-neighborhood
  
     yarn install
     
@@ -58,7 +63,6 @@ Documentação do [React](https://reactjs.org/docs/getting-started.html) usado p
 Documentação da API do [Foursquare](https://developer.foursquare.com/docs/api/endpoints) para as informações de lugares.
 
 Documentação da API do [Google Maps/Street View](https://developers.google.com/maps/documentation/) com o mapa, marcadores e infowindow.
-
 
 ## Fontes
 
