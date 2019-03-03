@@ -118,6 +118,13 @@ class Neighborhood extends Component {
             
             if(m.gMarker) {
                 m.gMarker.setVisible(m.isVisible);
+                
+                //Fix para resolver estado quando ja tem um selecionado que nao aparecera no resultado da lista.
+                if(m === this.state.currentMarker) {
+                    this.onInfoWindowClose(m);
+                    this.setState({isShowInfoWindow : false});
+                    this.state.prevInfoWindow.close();
+                }
             }
         })
 
