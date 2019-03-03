@@ -118,7 +118,7 @@ class Neighborhood extends Component {
         list.map( m => {
             m.isVisible = false;
             
-            if(Object.entries(m.gMarker).length !== 0 && m.gMarker.constructor === Object) {
+            if(m.gMarker.title) {
                 m.gMarker.setVisible(m.isVisible);
                 
                 //Fix para resolver estado quando ja tem um selecionado que nao aparecera no resultado da lista.
@@ -139,7 +139,7 @@ class Neighborhood extends Component {
             items: list.map( m => {
                 m.isVisible = true;
                 
-                if(Object.entries(m.gMarker).length !== 0 && m.gMarker.constructor === Object) {
+                if(m.gMarker.title) {
                     m.gMarker.setVisible(m.isVisible);
                 }
                 return m;
