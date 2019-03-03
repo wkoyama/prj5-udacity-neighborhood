@@ -8,7 +8,6 @@ function FoursquareInfo(props) {
     var sectionId = `card-section-${encodeName}`;
     var p = `address-${encodeName}`;
 
-    debugger
     return (
         <article key={encodeName} className="location-details">
             <div key={encodeName} className="location-details-container">

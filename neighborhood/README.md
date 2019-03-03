@@ -1,68 +1,73 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Mapa do bairro
 
-## Available Scripts
+Aplicativo que apresenta um mapa de um bairro com locais selecionados contendo informações provenientes da API do Foursquare e prévia de uma imagem retirada do street view. Esse aplicativo é meramente educacional para conclusão do projeto de Nanodegree Fullstack da Udacity.
 
-In the project directory, you can run:
+## Pré-Requisitos
 
-### `npm start`
+Ter instalado e configurado o [Yarn](https://yarnpkg.com/pt-BR/)
 
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+Caso não tenha, favor seguir o passo a passo [aqui](https://yarnpkg.com/pt-BR/docs/install)
 
-The page will reload if you make edits.<br>
-You will also see any lint errors in the console.
 
-### `npm test`
+## Executar projeto local
 
-Launches the test runner in the interactive watch mode.<br>
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- Baixe o projeto:
 
-### `npm run build`
+```
+    git clone https://github.com/wkoyama/prj5-udacity-neighborhood.git
+```
 
-Builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- Execute os seguintes comandos:
 
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
+```
+    cd prj5-udacity-neighborhood/neighborhood
+ 
+    yarn install
+    
+    yarn start
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Com essa sequência de comandos, executará o app em modo de desenvolvimento.
 
-### `npm run eject`
+Abra [http://localhost:3000](http://localhost:3000) para visualizar no seu browser.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+A página recarrega se há alterações.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Produção 
 
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+O projeto pode ser minificado e executado em produção conforme documentação gerada do creat-react-app, citado abaixo:
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+> `npm run build`
+>
+> Builds the app for production to the `build` folder.<br>
+>It correctly bundles React in production mode and optimizes the build for the best performance.
+>
+>The build is minified and the filenames include the hashes.<br>
+>Your app is ready to be deployed!
+>
+>See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-## Learn More
+## Documentação 
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Este projeto foi criado com [Create React App](https://github.com/facebook/create-react-app).
+Usei o framework do Bootstrap com React [React-Bootstrap](https://react-bootstrap.github.io/).
 
-To learn React, check out the [React documentation](https://reactjs.org/).
 
-### Code Splitting
+Documentação do [React](https://reactjs.org/docs/getting-started.html) usado para a implementação de UI dessa aplicação.
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
+Documentação da API do [Foursquare](https://developer.foursquare.com/docs/api/endpoints) para as informações de lugares.
 
-### Analyzing the Bundle Size
+Documentação da API do [Google Maps/Street View](https://developers.google.com/maps/documentation/) com o mapa, marcadores e infowindow.
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
 
-### Making a Progressive Web App
+## Fontes
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
+O aprendizado de React da unidade extracurricular
+[Fundamentos de React](https://classroom.udacity.com/nanodegrees/nd004-br/parts/a74f781e-7ddc-44cb-af41-32fe08a87e7c/modules/82766b2b-1870-4904-aa90-8ccbe63928c5/lessons/9a065aa0-91d4-44a3-ad96-8d9b44be4d11/concepts/96de82e9-38b6-4b05-b30e-fb2edce245d3) da Udacity.
 
-### Advanced Configuration
+Utilizei como base de ideia e implementação os seguintes links:
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
+- [Using Google Maps in React without custom libraries](https://cuneyt.aliustaoglu.biz/en/using-google-maps-in-react-without-custom-libraries/)
+- [google-maps-react makes adding Google Maps Api to a React app a breeze](https://itnext.io/google-maps-react-makes-adding-google-maps-api-to-a-react-app-a-breeze-effb7b89e54)
 
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+Ao me deparar com um problema de clicar em um marcador e abrir todos os infowindows, encontrei a solução [aqui](https://github.com/tomchentw/react-google-maps/issues/753#issuecomment-368408940) e mudei a implementação anterior.
